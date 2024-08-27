@@ -1,3 +1,4 @@
+// receive data via digital pin 
 #include <avr/io.h>
 #include <util/delay.h>
 #include "crc32.h"
@@ -8,6 +9,9 @@
 
 #define bit(b) (1 << (b))
 
+#define WAIT_FOR_HIGH(pin) while (!(PINA & bit(pin)))
+#define WAIT_FOR_LOW(pin) while (PINA & bit(pin))
+
 unsigned int recv_crc() {
 	PORTD |= bit(ACK_PIN); // ACK HIGH 
 	
@@ -15,13 +19,14 @@ unsigned int recv_crc() {
 	
 	for (unsigned char index = 0; index < 32; index++) {
 		// Wait for clock signal to go high
-		while (!(PINA & bit(CLOCK_PIN)));
+		WAIT_FOR_HIGH(CLOCK_PIN);
 		
-		// if read bit high then set CRC bit high in position index value 
-		(PINA & bit(DATA_PIN)) ? crc |= bit(index) : crc &= ~bit(index);
+		if (PIND & bit(DATA_PIN)) {
+			crc |= bit(index);
+		}
 		
 		// Wait for clock signal to go low
-		while (PINA & bit(CLOCK_PIN));
+		WAIT_FOR_LOW(CLOCK_PIN);
 	}
 	
 	PORTD &= ~bit(ACK_PIN); // Set ACK low 
@@ -35,13 +40,14 @@ unsigned int recv_length() {
 	
 	for (unsigned char index = 0; index < 32; index++) {
 		// Wait for clock signal to go high
-		while (!(PINA & bit(CLOCK_PIN)));
+		WAIT_FOR_HIGH(CLOCK_PIN);
 		
-		// if read bit high then set length bit high in position index value 
-		(PINA & bit(DATA_PIN)) ? length |= bit(index) : length &= ~bit(index);
+		if (PIND & bit(DATA_PIN)) {
+			length |= bit(index);
+		}
 		
 		// Wait for clock signal to go low
-		while (PINA & bit(CLOCK_PIN));
+		WAIT_FOR_LOW(CLOCK_PIN);
 	}
 	
 	PORTD &= ~bit(ACK_PIN); // Set ACK low 
@@ -59,15 +65,17 @@ unsigned int recv_data(unsigned char *data, unsigned int size) {
 		
 		for (unsigned char x = 0; x < 8; x++) {
 			// Wait for clock signal to go high
-			while (!(PINA & bit(CLOCK_PIN)));
+			WAIT_FOR_HIGH(CLOCK_PIN);
 			
-			(PIND & bit(DATA_PIN)) ? byte |= bit(x) : byte &= ~bit(x);
+			if (PIND & bit(DATA_PIN)) {
+				byte |= bit(x);
+			}
 			
 			// Wait for clock signal to go low
-			while (PINA & (1 << CLOCK_PIN));
+			WAIT_FOR_LOW(CLOCK_PIN);
 		}
 		
-		data[i] = byte;
+		data[index] = byte;
 	}
 	
 	PORTD &= ~bit(ACK_PIN); // Set ACK low 

@@ -10,12 +10,15 @@
 
 #define bit(b) (1 << (b))
 
+#define WAIT_FOR_HIGH(pin) while (!(PINA & bit(pin)))
+#define WAIT_FOR_LOW(pin) while (PINA & bit(pin))
+
 void transmit(unsigned char *data, unsigned int size, unsigned long bit_rate) {
 	// calculate CRC value of the data
 	crc32_t crc = crc32(data, size);
 	
 	// wait for ACK pin high 
-	while (!(PIND & bit(ACK_PIN))) {}
+	WAIT_FOR_HIGH(ACK_PIN);
 	
 	// transmit 32bit crc
 	for (unsigned char index = 0; index < 32; index++) {
@@ -30,7 +33,7 @@ void transmit(unsigned char *data, unsigned int size, unsigned long bit_rate) {
 	}
 	
 	// wait for ACK pin high 
-    while (!(PIND & bit(ACK_PIN))) {}
+    WAIT_FOR_HIGH(ACK_PIN);
 	
 	// transmit 32bit data length 
 	for (unsigned char index = 0; index < 32; index++) {
@@ -45,7 +48,7 @@ void transmit(unsigned char *data, unsigned int size, unsigned long bit_rate) {
 	}
 	
 	// wait for ACK pin high 
-    while (!(PIND & bit(ACK_PIN))) {}
+    WAIT_FOR_HIGH(ACK_PIN);
 	
 	// transmit data
     for (unsigned char i = 0; i < size; i++) {
@@ -60,7 +63,7 @@ void transmit(unsigned char *data, unsigned int size, unsigned long bit_rate) {
         }
         
         // wait for ACK pin high 
-        while (!(PIND & bit(ACK_PIN))) {}
+        WAIT_FOR_HIGH(ACK_PIN);
     }
 }
 
