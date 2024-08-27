@@ -14,6 +14,9 @@ void transmit(unsigned char *data, unsigned int size, unsigned long bit_rate) {
 	// calculate CRC value of the data
 	crc32_t crc = crc32(data, size);
 	
+	// wait for ACK pin high 
+	while (!(PIND & bit(ACK_PIN))) {}
+	
 	// transmit 32bit crc
 	for (unsigned char index = 0; index < 32; index++) {
 		(crc & bit(31 - index)) ? PORTD |= (1 << DATA_PIN) : PORTD &= ~ (1 << DATA_PIN);
@@ -26,6 +29,9 @@ void transmit(unsigned char *data, unsigned int size, unsigned long bit_rate) {
 		_delay_us(1000000 / (2 * bit_rate));              
 	}
 	
+	// wait for ACK pin high 
+    while (!(PIND & bit(ACK_PIN))) {}
+	
 	// transmit 32bit data length 
 	for (unsigned char index = 0; index < 32; index++) {
 		(size & (1 << (31 - index))) ? PORTD |= (1 << DATA_PIN) : PORTD &= ~(1 << DATA_PIN);
@@ -37,6 +43,9 @@ void transmit(unsigned char *data, unsigned int size, unsigned long bit_rate) {
 		PORTD &= ~(1 << CLOCK_PIN);  // Set CLOCK_PIN low
 		_delay_us(1000000 / (2 * bit_rate));
 	}
+	
+	// wait for ACK pin high 
+    while (!(PIND & bit(ACK_PIN))) {}
 	
 	// transmit data
     for (unsigned char i = 0; i < size; i++) {
