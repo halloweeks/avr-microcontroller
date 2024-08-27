@@ -10,8 +10,8 @@
 
 #define bit(b) (1 << (b))
 
-#define WAIT_FOR_HIGH(pin) while (!(PINA & bit(pin)))
-#define WAIT_FOR_LOW(pin) while (PINA & bit(pin))
+#define WAIT_FOR_HIGH(pin) while (!(PIND & bit(pin)))
+#define WAIT_FOR_LOW(pin) while (PIND & bit(pin))
 
 void transmit(unsigned char *data, unsigned int size, unsigned long bit_rate) {
 	// calculate CRC value of the data

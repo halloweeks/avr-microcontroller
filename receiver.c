@@ -9,8 +9,8 @@
 
 #define bit(b) (1 << (b))
 
-#define WAIT_FOR_HIGH(pin) while (!(PINA & bit(pin)))
-#define WAIT_FOR_LOW(pin) while (PINA & bit(pin))
+#define WAIT_FOR_HIGH(pin) while (!(PIND & bit(pin)))
+#define WAIT_FOR_LOW(pin) while (PIND & bit(pin))
 
 unsigned int recv_crc() {
 	PORTD |= bit(ACK_PIN); // ACK HIGH 
