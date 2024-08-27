@@ -2,7 +2,7 @@
 
 #include <avr/io.h>  // Include AVR IO definitions
 #include <util/delay.h> // Include delay functions
-#include "crc32.h"
+#include "crc32.h" // Include CRC checksum 
 
 #define CLOCK_PIN PD0  // Define CLOCK_PIN, adjust as necessary
 #define DATA_PIN PD1   // Define DATA_PIN, adjust as necessary
