@@ -14,11 +14,7 @@ void transmit(void *data, unsigned int size, unsigned long bit_rate) {
 	
 	// transmit 32bit crc
 	for (unsigned char index = 0; index < 32; index++) {
-		if (crc & (1 << (31 - index))) {
-			PORTD |= (1 << DATA_PIN);
-		} else {
-			PORTD &= ~ (1 << DATA_PIN);
-		}
+		(crc & (1 << (31 - index))) ? PORTD |= (1 << DATA_PIN) : PORTD &= ~ (1 << DATA_PIN);
 		
 		PORTD |= (1 << CLOCK_PIN);  // Set CLOCK_PIN high
 		_delay_us(1000000 / (2 * bit_rate));
