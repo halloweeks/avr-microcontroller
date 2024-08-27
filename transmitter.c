@@ -73,7 +73,7 @@ int main(void) {
     
     unsigned char data[] = "halloweeks";
     
-    transmit(data, sizeof(data) - 1);
+    transmit(data, sizeof(data) - 1, 1000);
     
     while (1) {}
     
