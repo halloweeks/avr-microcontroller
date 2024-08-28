@@ -25,7 +25,8 @@ void transmit(char *data, unsigned int size, unsigned long bit_rate) {
 int main() {
 	DDRD = bit(CLOCK_PIN) | bit(DATA_PIN); // Set CLOCK_PIN and DATA_PIN as output
 	
-	unsigned char data[] = "Hello, AVR!";
+	char data[] = "Hello, AVR!";
+	
 	transmit(data, sizeof(data) - 1, 1000); // Send "Hello, AVR!" at 1000 bps
 	
 	while (1) {}
