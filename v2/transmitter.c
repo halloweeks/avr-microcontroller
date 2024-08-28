@@ -1,5 +1,3 @@
-// transmit data via digital pin 
-
 #include <avr/io.h>  // Include AVR IO definitions
 #include <util/delay.h> // Include delay functions
 
