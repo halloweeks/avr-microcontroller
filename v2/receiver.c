@@ -1,4 +1,3 @@
-// receive data via digital pin 
 #include <avr/io.h>
 #include <util/delay.h>
 
@@ -25,7 +24,6 @@ void recv_data(char *data, unsigned int size) {
 }
 
 int main(void) {
-	// Initialize PORTA for receiving data (input mode)
 	DDRD &= ~bit(CLOCK_PIN); // Set clock pin for input
 	DDRD &= ~bit(DATA_PIN); // Set Data pin for input
 	
