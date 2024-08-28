@@ -10,23 +10,8 @@
 #define WAIT_FOR_HIGH(pin) while (!(PIND & bit(pin)))
 #define WAIT_FOR_LOW(pin) while (PIND & bit(pin))
 
-void recv_data(unsigned char *data) {
-	unsigned int length = 0;
-	
-	// read length 
-	for (unsigned char index = 0; index < 32; index++) {
-		// Wait for clock signal to go high
-		WAIT_FOR_HIGH(CLOCK_PIN);
-		
-		if (PIND & bit(DATA_PIN)) {
-			length |= bit(index);
-		}
-		
-		// Wait for clock signal to go low
-		WAIT_FOR_LOW(CLOCK_PIN);
-	}
-	
-	for (unsigned int index = 0; index < length * 8; index++) {
+void recv_data(unsigned char *data, unsigned int size) {
+	for (unsigned int index = 0; index < size * 8; index++) {
 		// Wait for clock signal to go high
 		WAIT_FOR_HIGH(CLOCK_PIN);
 		
@@ -47,7 +32,6 @@ int main(void) {
 	unsigned char buffer[100] = {0}; // hold 100 byte data in memory 
 	
 	recv_data(buffer);
-	
 	
 	while (1) {}
 	return 0;
