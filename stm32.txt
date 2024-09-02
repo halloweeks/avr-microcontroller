@@ -1,0 +1,15 @@
+STM32G4 
+GPIOA Base Address: 0x50000000
+
+Offset   | Register | Size  | Description
+---------|----------|-------|----------------------------
+0x00     | MODER    | 4 bytes | GPIO port mode register
+0x04     | OTYPER   | 4 bytes | GPIO port output type register
+0x08     | OSPEEDR  | 4 bytes | GPIO port output speed register
+0x0C     | PUPDR    | 4 bytes | GPIO port pull-up/pull-down register
+0x10     | IDR      | 4 bytes | GPIO port input data register
+0x14     | ODR      | 4 bytes | GPIO port output data register
+0x18     | BSRR     | 4 bytes | GPIO port bit set/reset register
+0x1C     | LCKR     | 4 bytes | GPIO port configuration lock register
+0x20     | AFRL     | 4 bytes | GPIO alternate function low register
+0x24     | AFRH     | 4 bytes | GPIO alternate function high register
