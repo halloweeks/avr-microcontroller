@@ -1,6 +1,5 @@
 #include <avr/io.h>
 #include <util/delay.h>
-#include <stdio.h>
 
 // UART initialization function
 void UART_init(unsigned int baud) {
@@ -23,38 +22,45 @@ void UART_print(const char *str) {
         UART_transmit(*str++);
     }
 }
-// Initialize the ADC
-void ADC_init() {
-    ADMUX = (1 << REFS0);           // Reference voltage AVcc with external capacitor at AREF pin, left adjust ADC result
-    ADCSRA = (1 << ADEN) |          // Enable ADC
-             (1 << ADPS2) |         // ADC prescaler 16 (ADPS2:0)
-             (1 << ADPS1);
+
+void adc_init() {
+    // Set the ADC reference voltage to AVcc with external capacitor at AREF pin
+    ADMUX = (1 << REFS0);
+    
+    // Set the ADC clock prescaler to 128 (16MHz/128 = 125kHz ADC clock)
+    ADCSRA = (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);
+    
+    // Enable the ADC
+    ADCSRA |= (1 << ADEN);
 }
 
-// Read an ADC value from a given channel
-uint16_t ADC_read(uint8_t channel) {
-    ADMUX = (ADMUX & 0xF8) | (channel & 0x07); // Mask the channel to 3 bits and select it
-    ADCSRA |= (1 << ADSC);                    // Start the conversion
+unsigned short analog_read(unsigned char channel) {
+    // Select ADC channel (0-7)
+    ADMUX = (ADMUX & 0xF8) | (channel & 0x07);
     
-    // Wait for conversion to complete
+    // Start the conversion
+    ADCSRA |= (1 << ADSC);
+    
+    // Wait for the conversion to complete
     while (ADCSRA & (1 << ADSC));
     
-    // Read the ADC value (10-bit result)
+    // Read and return the ADC result
     return ADC;
 }
 
-int main(void) {
-    ADC_init(); // Initialize ADC
+int main() {
+    adc_init();
     
     UART_init(9600); // Initialize UART with 9600 baud
     
     char buffer[10];
+    unsigned short value = 0;
     
     while (1) {
-        uint16_t adc_value = ADC_read(0); // Read from ADC channel 0
+        value = analog_read(0);  // Read analog value from channel 0
         snprintf(buffer, sizeof(buffer), "%u\n", adc_value);
         UART_print(buffer);
         
-        // Do something with adc_value
+        // Use the adc_value for further processing
     }
 }
