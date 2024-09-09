@@ -2,28 +2,28 @@
 #include <util/delay.h>
 
 typedef struct {
-    short x;
-    short y;
-    char b; // Button state
-} Joystick;
+    short x; // Joystick X axis 
+    short y; // Joystick Y axis 
+    char b;  // Button state
+} __attribute__((packed)) Joystick;
 
 typedef struct {
     Joystick joystick1;
     Joystick joystick2;
-} ControllerData;
+} __attribute__((packed)) ControllerData;
 
-static ControllerData prev_data = {{0, 0, 0}, {0, 0, 0}};
+static ControllerData previous_data = {{0, 0, 0}, {0, 0, 0}};
 
 char OnChangeController(ControllerData current_data) {
-    if (current_data.joystick1.x != prev_data.joystick1.x ||
-        current_data.joystick1.y != prev_data.joystick1.y ||
-        current_data.joystick1.b != prev_data.joystick1.b ||
-        current_data.joystick2.x != prev_data.joystick2.x ||
-        current_data.joystick2.y != prev_data.joystick2.y ||
-        current_data.joystick2.b != prev_data.joystick2.b) {
+    if (current_data.joystick1.x != previous_data.joystick1.x ||
+        current_data.joystick1.y != previous_data.joystick1.y ||
+        current_data.joystick1.b != previous_data.joystick1.b ||
+        current_data.joystick2.x != previous_data.joystick2.x ||
+        current_data.joystick2.y != previous_data.joystick2.y ||
+        current_data.joystick2.b != previous_data.joystick2.b) {
         
         // Update previous data
-        prev_data = current_data;
+        previous_data = current_data;
         return 1; // Indicates that there is a change
     }
     
@@ -40,21 +40,19 @@ void SendControllerData(ControllerData data) {
 }
 
 int main() {
-	ControllerData curr_data;
+	ControllerData data;
 	
 	while (1) {
-		curr_data.joystick1.x = analog_read(A0);
-		curr_data.joystick1.y = analog_read(A1);
-		curr_data.joystick1.b = digital_read(0);
-		curr_data.joystick2.x = analog_read(A2);
-		curr_data.joystick2.y = analog_read(A3);
-		curr_data.joystick2.b = digital_read(1);
+		data.joystick1.x = analog_read(A0);
+		data.joystick1.y = analog_read(A1);
+		data.joystick1.b = digital_read(0);
+		data.joystick2.x = analog_read(A2);
+		data.joystick2.y = analog_read(A3);
+		data.joystick2.b = digital_read(1);
 		
-		if (OnChangeController(curr_data)) {
-			SendControllerData(curr_data);
+		if (OnChangeController(data)) {
+			SendControllerData(data);
 		}
-		
-		_delay_ms(100);
 	}
 	
     return 0;
