@@ -37,25 +37,21 @@ void SendControllerData(ControllerData data) {
 }
 
 int main() {
-    ControllerData prev_data = {{0, 0, 0}, {0, 0, 0}};
-    ControllerData curr_data;
-    
-    while (1) {
-        // Here you would normally update curr_data with real joystick data
-        // For demonstration, we'll use dummy data
-        curr_data.joystick1.x = 1; // Update with actual function to read joystick 1 X
-        curr_data.joystick1.y = 2; // Update with actual function to read joystick 1 Y
-        curr_data.joystick1.b = 1; // Update with actual function to read joystick 1 button
-        curr_data.joystick2.x = 3; // Update with actual function to read joystick 2 X
-        curr_data.joystick2.y = 4; // Update with actual function to read joystick 2 Y
-        curr_data.joystick2.b = 0; // Update with actual function to read joystick 2 button
-
-        if (OnChangeController(curr_data, &prev_data)) {
-            SendControllerData(curr_data);
-        }
-        
-        // Add a delay or other logic to prevent continuous rapid execution
-    }
-    
+	ControllerData prev_data = {{0, 0, 0}, {0, 0, 0}};
+	ControllerData curr_data;
+	
+	while (1) {
+		curr_data.joystick1.x = analog_read(A0);
+		curr_data.joystick1.y = analog_read(A1);
+		curr_data.joystick1.b = digital_read(0);
+		curr_data.joystick2.x = analog_read(A2);
+		curr_data.joystick2.y = analog_read(A3);
+		curr_data.joystick2.b = digital_read(1);
+		
+		if (OnChangeController(curr_data, &prev_data)) {
+			SendControllerData(curr_data);
+		}
+	}
+	
     return 0;
 }
