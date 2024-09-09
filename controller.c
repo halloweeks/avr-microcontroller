@@ -1,4 +1,5 @@
-#include <stdio.h>
+#include <avr/io.h>
+#include <util/delay.h>
 
 typedef struct {
     short x;
@@ -11,16 +12,18 @@ typedef struct {
     Joystick joystick2;
 } ControllerData;
 
-char OnChangeController(ControllerData current_data, ControllerData *prev_data) {
-    if (current_data.joystick1.x != prev_data->joystick1.x ||
-        current_data.joystick1.y != prev_data->joystick1.y ||
-        current_data.joystick1.b != prev_data->joystick1.b ||
-        current_data.joystick2.x != prev_data->joystick2.x ||
-        current_data.joystick2.y != prev_data->joystick2.y ||
-        current_data.joystick2.b != prev_data->joystick2.b) {
+static ControllerData prev_data = {{0, 0, 0}, {0, 0, 0}};
+
+char OnChangeController(ControllerData current_data) {
+    if (current_data.joystick1.x != prev_data.joystick1.x ||
+        current_data.joystick1.y != prev_data.joystick1.y ||
+        current_data.joystick1.b != prev_data.joystick1.b ||
+        current_data.joystick2.x != prev_data.joystick2.x ||
+        current_data.joystick2.y != prev_data.joystick2.y ||
+        current_data.joystick2.b != prev_data.joystick2.b) {
         
         // Update previous data
-        *prev_data = current_data;
+        prev_data = current_data;
         return 1; // Indicates that there is a change
     }
     
@@ -37,7 +40,6 @@ void SendControllerData(ControllerData data) {
 }
 
 int main() {
-	ControllerData prev_data = {{0, 0, 0}, {0, 0, 0}};
 	ControllerData curr_data;
 	
 	while (1) {
@@ -48,9 +50,11 @@ int main() {
 		curr_data.joystick2.y = analog_read(A3);
 		curr_data.joystick2.b = digital_read(1);
 		
-		if (OnChangeController(curr_data, &prev_data)) {
+		if (OnChangeController(curr_data)) {
 			SendControllerData(curr_data);
 		}
+		
+		_delay_ms(100);
 	}
 	
     return 0;
