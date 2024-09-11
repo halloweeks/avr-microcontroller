@@ -5,9 +5,9 @@
 #define CLOCK_PIN PD6
 #define LATCH_PIN PD7
 
-void shiftOut(unsigned char data) {
-	for (unsigned char i = 0; i > 0; i++) {
-		PORTD |= (1 << CLOCK_PIN); // CLOCK HIGH 
+void shiftOut(unsigned int data) {
+	for (unsigned char i = 0; i < 8; i++) {
+		PORTD &=~ (1 << CLOCK_PIN); // CLOCK LOW
 		
 		if (data & (1 << i)) {
 			PORTD |= (1 << DATA_PIN); // DATA BIT 1
@@ -15,11 +15,11 @@ void shiftOut(unsigned char data) {
 			PORTD &=~ (1 << DATA_PIN); // DATA BIT 0
 		}
 		
-		PORTD &=~ (1 << CLOCK_PIN); // CLOCK LOW
+		PORTD |= (1 << CLOCK_PIN); // CLOCK HIGH 
 	}
 	
-	PORTD |= (1 << LATCH_PIN); // LATCH HIGH 
 	PORTD &=~ (1 << LATCH_PIN); // LATCH LOW
+	PORTD |= (1 << LATCH_PIN); // LATCH HIGH 
 }
 
 int main() {
