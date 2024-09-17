@@ -1,6 +1,6 @@
 #define _SFR_IO32(io_addr) (*(volatile unsigned int*)(io_addr))
 
-#define GPIOA_BASE (0x50000000)
+#define GPIOA_BASE 0x50000000
 #define GPIOA_MODER _SFR_IO32(GPIOA_BASE + 0x00)
 #define GPIOA_ODR _SFR_IO32(GPIOA_BASE + 0x14)
 
