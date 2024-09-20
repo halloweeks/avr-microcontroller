@@ -17,7 +17,7 @@ void _load(void* src, void *dst, unsigned int size) {
 }
 
 // Jump to the application
-    void (*app_start)(void) = (void (*)(void))APPLICATION_START;
-    app_start(); // Jump to application
+void (*app_start)(void) = (void (*)(void))APPLICATION_START;
+app_start(); // Jump to application
     
 ```
