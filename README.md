@@ -1,3 +1,15 @@
+PROPRIETARY LICENSE
+
+Copyright (c) 2024 Halloweeks
+
+All rights reserved.
+
+This source code is proprietary and confidential. You may not use, copy, modify, or distribute this source code without the express written permission of Halloweeks.
+
+For inquiries, please contact halloweeks@gmail.com.
+
+---
+
 # avr-microcontroller
 This code is not tested in AVR microcontroller maybe error or bugs
 
