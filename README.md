@@ -54,3 +54,14 @@ avrdude -c usbasp -p atmega328p -U flash:w:main.hex:i
 # Upload Bin to the microcontroller 
 avrdude -c usbasp -p atmega328p -U flash:w:main.bin
 ```
+
+## Controller Send and Receive 
+```c
+void SendData(void *data, unsigned int size) {
+	
+}
+
+void RecvData(void *data, unsigned int size) {
+	
+}
+```
